@@ -229,7 +229,7 @@ var listUser = function(db, callback) {
         });
 }
 
-// 데이터베이스 테이블 생성
+// 사용자 데이터베이스 테이블 생성
 var createTable = function (db, callback) {
     console.log('createTable 호출됨');
     
@@ -248,6 +248,21 @@ var createTable = function (db, callback) {
             return;
         });
 }
+
+// 디바이스 정보 데이터베이스 테이블 생성
+//CREATE TABLE public.device
+//(
+//    mobile character varying NOT NULL DEFAULT '',
+//    "osVersion" character varying NOT NULL DEFAULT '',
+//    model character varying NOT NULL DEFAULT '',
+//    display character varying NOT NULL DEFAULT '',
+//    manufacturer character varying NOT NULL DEFAULT '',
+//    "macAddress" character varying NOT NULL DEFAULT '',
+//    "registrationId" character varying NOT NULL DEFAULT '',
+//    created_at timestamp with time zone NOT NULL DEFAULT Now(),
+//    updated_at timestamp with time zone NOT NULL DEFAULT Now(),
+//    PRIMARY KEY (mobile)
+//)
 
 module.exports.login = login;
 module.exports.adduser = adduser;

@@ -31,6 +31,11 @@ console.log('config.server_port : %d', config.server_port);
 // 기본 속성 설정
 app.set('port', process.env.PORT || config.server_port);
 
+// 뷰 엔진 설정
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+console.log('뷰 엔진이 ejs로 설정되었습니다.');
+
 // body-parser를 이용해 application/x-www-form-urlencoded 파싱
 app.use(bodyParser.urlencoded({ extended: false }));
 
