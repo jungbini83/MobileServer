@@ -21,8 +21,8 @@ var adddevice = function(req, res) {
         database.one('INSERT into public.device(mobile, "osVersion", model, display, manufacturer, "macAddress") values($1, $2, $3, $4, $5, $6) returning mobile', 
                      [paramMobile, paramOsVersion, paramModel, paramDisplay, paramManufacturer, paramMacAddress])
             .then(data => {
-                if (data.id) {
-                    console.log('다음 단말 데이터 추가함 : ' + data.id);
+                if (data.mobile) {
+                    console.log('다음 단말 데이터 추가함 : ' + data.mobile);
                     
                     res.writeHead('200', {'Content-Type':'application/json;charset=utf8'});
                     res.write("{code:'200', 'message':'단말 데이터 추가 성공'}");
