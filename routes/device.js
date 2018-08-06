@@ -18,7 +18,7 @@ var adddevice = function(req, res) {
     if(database) {
         
         // Device 정보 저장
-        database.one('INSERT into public.device(mobile, osVersion, model, display, manufacturer, macAddress) values($1, $2, $3, $4, $5, $6) returning mobile', 
+        database.one("INSERT into public.device(mobile, 'osVersion', model, display, manufacturer, 'macAddress') values($1, $2, $3, $4, $5, $6) returning mobile", 
                      [paramMobile, paramOsVersion, paramModel, paramDisplay, paramManufacturer, paramMacAddress])
             .then(data => {
                 if (data.id) {
