@@ -7,7 +7,7 @@ var adddevice = function(req, res) {
     var paramOsVersion  = req.body.osVersion || req.query.osVersion;
     var paramModel      = req.body.model || req.query.model;
     var paramDisplay    = req.body.display || req.query.display;
-    var paramManufacturer = req.body.manufaturer || req.query.manufacturer;
+    var paramManufacturer = req.body.manufacturer || req.query.manufacturer;
     var paramMacAddress = req.body.macAddress || req.query.macAddress;
     
     console.log('요청 파라미터 : ' + paramMobile + ', ' + paramOsVersion + ', ' +
