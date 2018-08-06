@@ -34,8 +34,6 @@ var adddevice = function(req, res) {
                     res.write("{code:'404', 'message':'단말 데이터 추가 실패'}");
                     res.end();
                 }
-
-                callback(null, data.id);
             })
             .catch(err => {
                 console.error('단말 정보 추가 중 오류 발생 : ' + err.stack);
