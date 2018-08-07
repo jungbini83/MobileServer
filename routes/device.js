@@ -68,6 +68,10 @@ var listdevice = function(req, res) {
                     };
                     
                     req.app.render('listdevice', context, function(err, html) {
+                        if(err) {
+                            console.error(err.stack);
+                        }
+                        
                         res.end(html);
                     });
                 }
