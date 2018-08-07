@@ -192,25 +192,7 @@ var sendall = function(req, res) {
                             res.write('<h2>푸시 메시지 전송 성공</h2>');
                             res.end();
                         }
-                    });
-                    
-                    
-            
-                                        
-//                    // node-gcm을 사용해 전송
-//                    var message = new fcm.Message();
-//                    message.addData('command', 'show');
-//                    message.addData('type', 'text/plain');
-//                    message.addData('message', paramData);                    
-//                    
-//                    var sender = new fcm.Sender(config.fcm_api_key);
-//                    sender.send(message, regIds, function (err, result) {
-//                        if(err) {throw err;}
-//                        console.dir(result);
-//                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-//                        res.write('<h2>푸시 메시지 전송 성공</h2>');
-//                        res.end();
-//                    });
+                    });                    
                 }
             })
             .catch(function(err) {
