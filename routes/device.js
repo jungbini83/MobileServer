@@ -151,58 +151,21 @@ var sendall = function(req, res) {
                         regIds.push(curId);
                     }
                     console.log('전송 대상 단말 수 : ' + regIds.length);
-                    
-                    for (var j = 0 ; j < regIds.length ; j++) {
-                                                
-                        var options = {
-                            url : 'https://fcm.googleapis.com/fcm/send',
-                            method : 'POST',
-                            headers : {
-                                    'Content-Type' : 'application/json',
-                                    'Authorization' : apikey
-                            },
-                            body : JSON.stringify({
-                                to : regIds[j],
-                                nodification: {
-                                    title: 'emoodchart',
-                                    message : paramData
-                                },                                    
-                                data : {
-                                    title: 'emoodchart',
-                                    message : paramData
-                                }                                        
-                            })
-                        };
-                        
-                        console.log(options);
-                        
-                        request(options, function(err, res, body) {
-                            if (err) {
-                                console.error(err);
-                            } else {
-                                console.dir(body);
-//                                res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-//                                res.write('<h2>푸시 메시지 전송 성공</h2>');
-//                                res.end();
-                            }
-                        });
-                    }
                                         
                     // node-gcm을 사용해 전송
-//                    var message = new fcm.Message();
-//                    message.addData('command', 'show');
-//                    message.addData('type', 'text/plain');
-//                    message.addData('data', paramData);
-//                    message.addData('notification', paramData);
-//                    
-//                    var sender = new fcm.Sender(config.fcm_api_key);
-//                    sender.send(message, regIds, function (err, result) {
-//                        if(err) {throw err;}
-//                        console.dir(result);
-//                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-//                        res.write('<h2>푸시 메시지 전송 성공</h2>');
-//                        res.end();
-//                    });
+                    var message = new fcm.Message();
+                    message.addData('command', 'show');
+                    message.addData('type', 'text/plain');
+                    message.addData('message', paramData);                    
+                    
+                    var sender = new fcm.Sender(config.fcm_api_key);
+                    sender.send(message, regIds, function (err, result) {
+                        if(err) {throw err;}
+                        console.dir(result);
+                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                        res.write('<h2>푸시 메시지 전송 성공</h2>');
+                        res.end();
+                    });
                 }
             })
             .catch(function(err) {
