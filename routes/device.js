@@ -101,7 +101,7 @@ var register = function(req, res) {
     
     // 데이터 베이스 객체가 초기화된 경우
     if(database) {
-        database.none('UPDATE public.device set registrationId = $1 where id = $2', [paramRegistrationId, paramMobile])
+        database.none('UPDATE public.device set "registrationId" = $1 where id = $2', [paramRegistrationId, paramMobile])
         .then(data => {
             console.log("등록 ID 업데이트함.");
             console.dir(result);
