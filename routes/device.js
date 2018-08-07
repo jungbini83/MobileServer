@@ -152,7 +152,7 @@ var sendall = function(req, res) {
                     var message = {title: "push message", content: paramData};
 
                     for (var j = 0 ; j < regIds.length ; j++) {
-                        request({
+                        req.post({
                             url: 'https://fcm.googleapis.com/fcm/send',
                             method: 'POST',
                             headers: {
