@@ -158,7 +158,7 @@ var sendall = function(req, res) {
                                 method : 'POST',
                                 headers : {
                                         'Content-Type' : 'application/json',
-                                        'Authorization' : "'" + config.fcm_api_key + "'"
+                                        'Authentication' : config.fcm_api_key
                                 },
                                 body : JSON.stringify({
                                         "data" : {
