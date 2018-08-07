@@ -144,6 +144,8 @@ var sendall = function(req, res) {
                 if(data.length > 0) {
                     console.dir(data);    
                     
+                    var message = { title : "emoodchart" , content : paramData }
+                    
                     var regIds = [];
                     for(var i = 0 ; i < data.length ; i++) {
                         var curId = data[i].registrationId;
@@ -152,9 +154,6 @@ var sendall = function(req, res) {
                     }
                     console.log('전송 대상 단말 수 : ' + regIds.length);
                     
-                    function sendTopicMessage(title, content, imgUrl, link) {
-                    var message = { title : "emoodchart" , content : paramData }
-                    
                     request({
                         url : 'https://fcm.googleapis.com/fcm/send',
                         method : 'POST',
@@ -162,11 +161,24 @@ var sendall = function(req, res) {
                             'Content-Type' : ' application/json',
                             'Authorization' : apikey
                         },
-                        body : JSON.stringify({
+                        body : JSON.stringify({                            
                             "data" : {
-                                "message" : message
+                                // "message" : message
+                                "content": paramData
                             },
-                            "to" : "/topics/notice"
+                            "notification" : {
+                                "title": "emoodchart",
+                                "body": paramData,                                    
+                                "sound": "default"
+                            },
+                            "android":{
+                               "notification":{
+                                  "body":"emoodchart",
+                                  "title": paramData,
+                                  "sound":"default"
+                               }
+                            },    
+                            "to" : "/topics/notice"                                
                         })
                     }, function(error, response, body) {
                         if (error) {
@@ -181,7 +193,9 @@ var sendall = function(req, res) {
                             res.end();
                         }
                     });
-            } 
+                    
+                    
+            
                                         
 //                    // node-gcm을 사용해 전송
 //                    var message = new fcm.Message();
