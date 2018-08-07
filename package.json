@@ -15,6 +15,7 @@
     "node-gcm": "^1.0.2",
     "path": "^0.12.7",
     "pg-promise": "^8.4.5",
+    "request": "^2.87.0",
     "semantic-ui": "^2.3.3",
     "serve-static": "^1.13.2"
   },
