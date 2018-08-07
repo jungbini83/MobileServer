@@ -153,34 +153,38 @@ var sendall = function(req, res) {
                     console.log('전송 대상 단말 수 : ' + regIds.length);
                     
                     for (var j = 0 ; j < regIds.length ; j++) {
-                        var message = { title : "Push 메시지" , content : paramData }
+                                                
+                        var options = {
+                            url : 'https://fcm.googleapis.com/fcm/send',
+                            method : 'POST',
+                            headers : {
+                                    'Content-Type' : 'application/json',
+                                    'Authorization' : apkey
+                            },
+                            body : JSON.stringify({
+                                to : regIds[j],
+                                nodification: {
+                                    title: 'emoodchart',
+                                    message : paramData
+                                },                                    
+                                data : {
+                                    title: 'emoodchart',
+                                    message : paramData
+                                }                                        
+                            })
+                        };
                         
-                        request({
-                                url : 'https://fcm.googleapis.com/fcm/send',
-                                method : 'POST',
-                                headers : {
-                                        'Content-Type' : 'application/json',
-                                        'Authorization' : apikey
-                                },
-                                body : JSON.stringify({
-                                    registration_ids: regIds[j]    ,
-                                    "data" : {
-                                            "message" : message
-                                    }
-                                        
-                                })
-                        }, function(error, response, body) {
-                                if (error) {
-                                        console.error(error, response, body);
-                                } else if (response.statusCode >= 400) {
-                                        console.error('HTTP Error: ' + response.statusCode + ' - '
-                                                        + response.statusMessage + '\n' + body);
-                                } else {
-                                        console.dir(body);
-                                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                                        res.write('<h2>푸시 메시지 전송 성공</h2>');
-                                        res.end();
-                                }
+                        console.log(options);
+                        
+                        request(options, function(err, res, body) {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                console.dir(body);
+                                res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                                res.write('<h2>푸시 메시지 전송 성공</h2>');
+                                res.end();
+                            }
                         });
                     }
                                         
