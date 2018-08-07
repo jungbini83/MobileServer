@@ -121,6 +121,63 @@ var register = function(req, res) {
     }
 }
 
+var sendall = function(req, res) {
+    console.log('device 모듈 안에 있는 sendall 호출됨.');
+    
+    var config = require('../config');
+    
+    var database = req.app.get('database');
+        
+    var paramData = req.body.data || req.query.data;
+    
+    console.log('요청 파라미터 : ' + paramData);
+    
+    // 데이터베이스 객체가 초기화된 경우
+    if(database) {
+        // 1. 모든 단말 검색
+        database.any('SELECT * from device')
+            .then(function(data) {
+                if(data.length > 0) {
+                    console.dir(data);    
+                    
+                    var regIds = [];
+                    for(var i = 0 ; i < data.length ; i++) {
+                        var curId = data[i].registrationId;
+                        console.log('등록 ID #' + i + ' : ' + regIds.length);
+                        regIds.push(curId);
+                    }
+                    console.log('전송 대상 단말 수 : ' + regIds.length);
+                    
+                    // node-gcm을 사용해 전송
+                    var message = new fcm.Message();
+                    message.addData('command', 'show');
+                    message.addData('type', 'text/plain');
+                    message.addData('data', paramData);
+                    
+                    var sender = new fcm.Sender(config.fcm_api_key);
+                    sender.send(message, regIds, function (err, result) {
+                        if(err) {throw err;}
+                        console.dir(result);
+                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                        res.write('<h2>푸시 메시지 전송 성공</h2>');
+                        res.end();
+                    });
+                }
+            })
+            .catch(function(err) {
+                console.error('단말 리스트 조회 중 오류 발생 : ' + err.stack);
+
+                res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                res.write('<h2>단말 리스트 조회 중 오류 발생</h2>');
+                res.write('<p>' + err.stack + '</p>');
+                res.end();
+
+                return;
+            });
+    }
+}
+
 module.exports.adddevice = adddevice;
 module.exports.listdevice = listdevice;
 module.exports.register = register;
+module.exports.sendall = sendall;
