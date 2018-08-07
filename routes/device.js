@@ -163,10 +163,11 @@ var sendall = function(req, res) {
                                         'Authorization' : apikey
                                 },
                                 body : JSON.stringify({
-                                        "data" : {
-                                                "message" : message
-                                        },
-                                        "to" : regIds[j]
+                                    registration_ids: regIds[j]    ,
+                                    "data" : {
+                                            "message" : message
+                                    }
+                                        
                                 })
                         }, function(error, response, body) {
                                 if (error) {
