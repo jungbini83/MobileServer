@@ -159,7 +159,7 @@ var sendall = function(req, res) {
                             method : 'POST',
                             headers : {
                                     'Content-Type' : 'application/json',
-                                    'Authorization' : apkey
+                                    'Authorization' : apikey
                             },
                             body : JSON.stringify({
                                 to : regIds[j],
