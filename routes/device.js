@@ -1,5 +1,5 @@
 var fcm = require('node-gcm');
-var config = require('../config/config.js');
+var config = require('../config');
 
 var adddevice = function(req, res) {
     console.log('device 모듈 안에 있는 adddevice 호출됨.');
