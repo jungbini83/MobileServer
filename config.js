@@ -7,6 +7,7 @@ module.exports = {
         {file: './user', path: '/process/listuser', method: 'listuser', type: 'post'},
         {file: './user', path: '/process/createtable', method: 'createtable', type: 'post'},
         {file: './device', path: '/process/adddevice', method: 'adddevice', type: 'post'},
-        {file: './device', path: '/process/listdevice', method: 'listdevice', type: 'post'}
+        {file: './device', path: '/process/listdevice', method: 'listdevice', type: 'post'},
+        {file: './device', path: '/process/register', method: 'register', type: 'post'}
     ]
 }
