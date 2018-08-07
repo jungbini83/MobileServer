@@ -146,28 +146,31 @@ var sendall = function(req, res) {
                         var curId = data[i].registrationId;
                         console.log('등록 ID #' + i + ' : ' + regIds.length);
                         regIds.push(curId);
+                        
+                        var message = {                        
+                            data: {
+                                command: 'show',
+                                type: 'text/plain',
+                                msg: paramData
+                            },
+                            token: curId
+                        };      
+                    
+                        var sender = new fcm.Sender(config.fcm_api_key);
+                        sender.send(message)
+                        .then((res) => {
+                            console.dir(res);
+                            res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                            res.write('<h2>푸시 메시지 전송 성공</h2>');
+                            res.end();
+                        })
+                        .catch((err) => {
+                            throw err;       
+                        });
                     }
                     console.log('전송 대상 단말 수 : ' + regIds.length);
                     
-                    var message = {                        
-                        data: {
-                            command: 'show',
-                            type: 'text/plain',
-                            msg: paramData
-                        }                        
-                    }                        
                     
-                    var sender = new fcm.Sender(config.fcm_api_key);
-                    sender.send(message, regIds)
-                    .then((res) => {
-                        console.dir(res);
-                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                        res.write('<h2>푸시 메시지 전송 성공</h2>');
-                        res.end();
-                    })
-                    .catch((err) => {
-                        throw err;       
-                    });
                     
                     
                     // node-gcm을 사용해 전송
