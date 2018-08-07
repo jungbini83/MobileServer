@@ -157,7 +157,7 @@ var sendall = function(req, res) {
                         }                        
                     }                        
                     
-                    var sender = new fcm.send(config.fcm_api_key);
+                    var sender = new fcm.Sender(config.fcm_api_key);
                     sender.send(message, regIds)
                     .then((res) => {
                         console.dir(res);
