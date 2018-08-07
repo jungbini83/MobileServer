@@ -78,12 +78,12 @@
 						<div class="ui very relaxed selection celled list">
 							<%  
 							    for (var i = 0; i < devices.length; i++) {
-								   var curMobile = devices[i]._doc.mobile;
-								   var curOsVersion = devices[i]._doc.osVersion;
-								   var curModel = devices[i]._doc.model;
-								   var curDisplay = devices[i]._doc.display;
-								   var curManufacturer = devices[i]._doc.manufacturer;
-								   var curMacAddress = devices[i]._doc.macAddress;
+								   var curMobile = devices[i].mobile;
+								   var curOsVersion = devices[i].osVersion;
+								   var curModel = devices[i].model;
+								   var curDisplay = devices[i].display;
+								   var curManufacturer = devices[i].manufacturer;
+								   var curMacAddress = devices[i].macAddress;
 								   var curNo = devices.length - i;
 								   %>
 								    <div class="item">
