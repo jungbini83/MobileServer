@@ -1,3 +1,6 @@
+var fcm = require('node-gcm');
+var config = require('../config/config.js');
+
 var adddevice = function(req, res) {
     console.log('device 모듈 안에 있는 adddevice 호출됨.');
     
@@ -123,9 +126,7 @@ var register = function(req, res) {
 
 var sendall = function(req, res) {
     console.log('device 모듈 안에 있는 sendall 호출됨.');
-    
-    var config = require('../config');
-    
+        
     var database = req.app.get('database');
         
     var paramData = req.body.data || req.query.data;
