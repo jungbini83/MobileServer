@@ -153,8 +153,7 @@ var sendall = function(req, res) {
                     var message = new fcm.Message();
                     message.addData('command', 'show');
                     message.addData('type', 'text/plain');
-                    message.addData('data', paramData);
-                    message.addData('notification', paramData);
+                    message.addData('pushmsg', paramData);
                     
                     var sender = new fcm.Sender(config.fcm_api_key);
                     sender.send(message, regIds, function (err, result) {
