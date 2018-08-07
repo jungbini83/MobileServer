@@ -57,7 +57,7 @@ var listdevice = function(req, res) {
     if(database) {
         
         // 1. 모든 단말 검색
-        db.any('SELECT * from device')
+        database.any('SELECT * from device')
             .then(function(data) {
                 if(data.length > 0) {
                     console.dir(data);
