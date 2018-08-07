@@ -132,6 +132,8 @@ var sendall = function(req, res) {
         
     var paramData = req.body.data || req.query.data;
     
+    var apikey = config.fcm_api_key;
+    
     console.log('요청 파라미터 : ' + paramData);
     
     // 데이터베이스 객체가 초기화된 경우
@@ -158,7 +160,7 @@ var sendall = function(req, res) {
                                 method : 'POST',
                                 headers : {
                                         'Content-Type' : 'application/json',
-                                        'Authorization' : 'key=${config.fcm_api_key}'
+                                        'Authorization' : 'key=${apikey}'
                                 },
                                 body : JSON.stringify({
                                         "data" : {
