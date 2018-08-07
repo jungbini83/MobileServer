@@ -132,7 +132,7 @@ var sendall = function(req, res) {
         
     var paramData = req.body.data || req.query.data;
     
-    var apikey = config.fcm_api_key;
+    var apikey = 'key=' + config.fcm_api_key;
     
     console.log('요청 파라미터 : ' + paramData);
     
@@ -160,7 +160,7 @@ var sendall = function(req, res) {
                                 method : 'POST',
                                 headers : {
                                         'Content-Type' : 'application/json',
-                                        'Authorization' : 'key=${apikey}'
+                                        'Authorization' : apikey
                                 },
                                 body : JSON.stringify({
                                         "data" : {
