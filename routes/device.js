@@ -157,8 +157,8 @@ var sendall = function(req, res) {
                                 url : 'https://fcm.googleapis.com/fcm/send',
                                 method : 'POST',
                                 headers : {
-                                        'Content-Type' : ' application/json',
-                                        'Authorization' : config.fcm_api_key
+                                        'Content-Type' : 'application/json',
+                                        'Authorization' : "'" + config.fcm_api_key + "'"
                                 },
                                 body : JSON.stringify({
                                         "data" : {
