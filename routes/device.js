@@ -151,21 +151,52 @@ var sendall = function(req, res) {
                         regIds.push(curId);
                     }
                     console.log('전송 대상 단말 수 : ' + regIds.length);
-                                        
-                    // node-gcm을 사용해 전송
-                    var message = new fcm.Message();
-                    message.addData('command', 'show');
-                    message.addData('type', 'text/plain');
-                    message.addData('message', paramData);                    
                     
-                    var sender = new fcm.Sender(config.fcm_api_key);
-                    sender.send(message, regIds, function (err, result) {
-                        if(err) {throw err;}
-                        console.dir(result);
-                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                        res.write('<h2>푸시 메시지 전송 성공</h2>');
-                        res.end();
+                    function sendTopicMessage(title, content, imgUrl, link) {
+                    var message = { title : "emoodchart" , content : paramData }
+                    
+                    request({
+                        url : 'https://fcm.googleapis.com/fcm/send',
+                        method : 'POST',
+                        headers : {
+                            'Content-Type' : ' application/json',
+                            'Authorization' : apikey
+                        },
+                        body : JSON.stringify({
+                            "data" : {
+                                "message" : message
+                            },
+                            "to" : "/topics/notice"
+                        })
+                    }, function(error, response, body) {
+                        if (error) {
+                            console.error(error, response, body);
+                        } else if (response.statusCode >= 400) {
+                            console.error('HTTP Error: ' + response.statusCode + ' - '
+                                                + response.statusMessage + '\n' + body);
+                        } else {
+                            console.dir(body);
+                            res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                            res.write('<h2>푸시 메시지 전송 성공</h2>');
+                            res.end();
+                        }
                     });
+            } 
+                                        
+//                    // node-gcm을 사용해 전송
+//                    var message = new fcm.Message();
+//                    message.addData('command', 'show');
+//                    message.addData('type', 'text/plain');
+//                    message.addData('message', paramData);                    
+//                    
+//                    var sender = new fcm.Sender(config.fcm_api_key);
+//                    sender.send(message, regIds, function (err, result) {
+//                        if(err) {throw err;}
+//                        console.dir(result);
+//                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+//                        res.write('<h2>푸시 메시지 전송 성공</h2>');
+//                        res.end();
+//                    });
                 }
             })
             .catch(function(err) {
