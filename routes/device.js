@@ -149,36 +149,25 @@ var sendall = function(req, res) {
                     }
                     console.log('전송 대상 단말 수 : ' + regIds.length);
                     
-                    var message = {title: "push message", content: paramData};
-
-                    for (var j = 0 ; j < regIds.length ; j++) {
-                        req.post({
-                            url: 'https://fcm.googleapis.com/fcm/send',
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'key=' + config.fcm_api_key
-                            },
-                            body: JSON.stringify({
-                                "data": {
-                                    "message":message
-                                },
-                                "to": regIds[j]
-                            })
-                        }, function(err, res, body) {
-                            if (err) {
-                                console.error(err, res, body);
-                            } else if(res.statusCode >= 400) {
-                                console.error('HTTP Error: ' + res.statusCode + '-' + res.statusMessage + '\n' + body);
-                            } else {
-                                console.dir(body);
-                                res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-//                        res.write('<h2>푸시 메시지 전송 성공</h2>');
-//                        res.end();
-                            }
-                        })
-                    }
-                        
+                    var message = {                        
+                        data: {
+                            command: 'show',
+                            type: 'text/plain',
+                            msg: paramData
+                        }                        
+                    }                        
+                    
+                    var sender = new fcm.send(config.fcm_api_key);
+                    sender.send(message, regIds)
+                    .then((res) => {
+                        console.dir(res);
+                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                        res.write('<h2>푸시 메시지 전송 성공</h2>');
+                        res.end();
+                    })
+                    .catch((err) => {
+                        throw err;       
+                    });
                     
                     
                     // node-gcm을 사용해 전송
