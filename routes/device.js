@@ -23,7 +23,7 @@ var adddevice = function(req, res) {
         database.any('SELECT user_id from public.push_registry where user_id = $1 and proj_id = $2 and inst_id = $3', [paramUserId, paramProjId, paramInstId])
         .then(data => {
             if (data.length > 0) {
-                console.log('이미 사용자 정보가 존재합니다 : ' + data);
+                console.log('이미 사용자 정보가 존재합니다 : ' + data[0]);
                 
                 res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
                 res.write("<h2>이미 사용자 정보가 존재합니다.<h2>");
