@@ -14,7 +14,7 @@ var adddevice = function(req, res) {
     var paramInstId     = req.body.instId || req.query.instId;
     var paramRegId      = req.body.regId || req.query.regId;
     
-    console.log('요청 파라미터 : ' + paramUserId + ', ' + paramProjId + ', ' + paramInstId + ', ' + regId);
+    console.log('요청 파라미터 : ' + paramUserId + ', ' + paramProjId + ', ' + paramInstId + ', ' + paramRegId);
     
     // 데이터베이스 객체가 초기화된 경우
     if(database) {
