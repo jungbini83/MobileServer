@@ -7,35 +7,31 @@ var adddevice = function(req, res) {
     
     var database = req.app.get('database');
     
-    var paramMobile     = req.body.mobile || req.query.mobile;
-    var paramOsVersion  = req.body.osVersion || req.query.osVersion;
-    var paramModel      = req.body.model || req.query.model;
-    var paramDisplay    = req.body.display || req.query.display;
-    var paramManufacturer = req.body.manufacturer || req.query.manufacturer;
-    var paramMacAddress = req.body.macAddress || req.query.macAddress;
+    var paramUserId     = req.body.userId || req.query.userId;
+    var paramProjId     = req.body.projId || req.query.projId;
+    var paramInstId     = req.body.instId || req.query.instId;
+    var paramRegId      = req.body.regId || req.query.regId;
     
-    console.log('요청 파라미터 : ' + paramMobile + ', ' + paramOsVersion + ', ' +
-               paramModel + ', ' + paramDisplay + ', ' +
-               paramManufacturer + ', ' + paramMacAddress);
+    console.log('요청 파라미터 : ' + paramUserId + ', ' + paramPorjId + ', ' + paramInstId + ', ' + regId);
     
     // 데이터베이스 객체가 초기화된 경우
     if(database) {
         
         // Device 정보 저장
-        database.one('INSERT into public.device(mobile, "osVersion", model, display, manufacturer, "macAddress") values($1, $2, $3, $4, $5, $6) returning mobile', 
-                     [paramMobile, paramOsVersion, paramModel, paramDisplay, paramManufacturer, paramMacAddress])
+        database.one('INSERT into public.push_registry(user_id, proj_id, inst_id, registration_id) values($1, $2, $3, $4) returning user_id', 
+                     [paramUserId, paramProjId, paramInstId, paramRegId])
             .then(data => {
-                if (data.mobile) {
-                    console.log('다음 단말 데이터 추가함 : ' + data.mobile);
+                if (data.user_id) {
+                    console.log('다음 단말 데이터 추가함 : ' + data.user_id);
                     
-                    res.writeHead('200', {'Content-Type':'application/json;charset=utf8'});
-                    res.write("{code:'200', 'message':'단말 데이터 추가 성공'}");
+                    res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                    res.write("<h2>단말 데이터 추가 성공<h2>");
                     res.end();
                 } else {
                     console.log('추가된 단말 데이터가 없음.');
                     
-                    res.writeHead('404', {'Content-Type':'application/json;charset=utf8'});
-                    res.write("{code:'404', 'message':'단말 데이터 추가 실패'}");
+                    res.writeHead('404', {'Content-Type':'text/html;charset=utf8'});
+                    res.write("<h2>단말 데이터 추가 실패<h2>");
                     res.end();
                 }
             })
