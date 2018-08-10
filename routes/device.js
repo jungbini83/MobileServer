@@ -119,38 +119,6 @@ var listdevice = function(req, res) {
     }
 }
 
-var register = function(req, res) {
-    console.log('device 모듈 안에 있는 register 호출됨.');
-    
-    var database = req.app.get('database');
-    
-    var paramMobile = req.body.mobile || req.query.mobile;
-    var paramRegistrationId = req.body.registrationId || req.query.registrationId;
-    
-    console.log('요청 파라미터 : ' + paramMobile + ', ' + paramRegistrationId);
-    
-    // 데이터 베이스 객체가 초기화된 경우
-    if(database) {
-        database.none('UPDATE public.device set "registrationId" = $1 where mobile = $2', [paramRegistrationId, paramMobile])
-        .then(data => {
-            console.log("등록 ID 업데이트함.");
-            console.dir(result);
-            
-            res.writeHead('200', {'Content-Type': 'application/json;charset=utf8'});
-            res.write("{code: '200', 'message':'등록 ID 업데이트 성공'}");
-            res.end();
-        })
-        .catch(error => {
-            console.error('당말 등록 중 오류 발생 : ' + error);
-            res.writeHead('200', {'Content-Type': 'text/html;charset=utf8'});
-            res.write("<h2>단말 등록 중 오류 발생</h2>");
-            res.write('<p>' + error + '</p>');
-            res.end();
-            return;
-        });
-    }
-}
-
 var sendall = function(req, res) {
     console.log('device 모듈 안에 있는 sendall 호출됨.');
         
@@ -165,7 +133,7 @@ var sendall = function(req, res) {
     // 데이터베이스 객체가 초기화된 경우
     if(database) {
         // 1. 모든 단말 검색
-        database.any('SELECT * from device')
+        database.any('SELECT * from push_registry')
             .then(function(data) {
                 if(data.length > 0) {
                     console.dir(data);    
@@ -174,7 +142,7 @@ var sendall = function(req, res) {
                     
                     var regIds = [];
                     for(var i = 0 ; i < data.length ; i++) {
-                        var curId = data[i].registrationId;
+                        var curId = data[i].registration_id;
                         console.log('등록 ID #' + i + ' : ' + regIds.length);
                         regIds.push(curId);
                     }
