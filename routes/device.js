@@ -204,5 +204,4 @@ var sendall = function(req, res) {
 
 module.exports.adddevice = adddevice;
 module.exports.listdevice = listdevice;
-module.exports.register = register;
 module.exports.sendall = sendall;
