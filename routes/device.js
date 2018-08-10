@@ -119,41 +119,98 @@ var listdevice = function(req, res) {
     }
 }
 
+var groupingPushUser = function(db, callback) {
+    console.log('groupingPushUser 함수 호출됨.');
+    
+    db.any('SELECT * from push_registry')
+    .then(function(data) {
+        if(data.length > 0) {
+            console.dir(data);    
+
+            var regIds = [];
+            for(var i = 0 ; i < data.length ; i++) {
+                var curId = data[i].registration_id;
+                console.log('등록 ID #' + i + ' : ' + regIds.length);
+                regIds.push(curId);
+            }            
+            
+            console.log('전송 대상 단말 수 : ' + regIds.length);
+            callback(null, regIds);            
+            
+        } else {
+            callback(null, null);
+        }
+    })
+    .catch(function(err) {
+        callback(err, null);
+        return;
+    });
+}
+    
+
 var sendall = function(req, res) {
     console.log('device 모듈 안에 있는 sendall 호출됨.');
         
     var database = req.app.get('database');
         
-    var paramData = req.body.data || req.query.data;
+    var paramData = req.body.data || req.query.data;    
+    var message = { title : "emoodchart" , content : paramData }
     
     var apikey = 'key=' + config.fcm_api_key;
+    var projectId = '' + config.project_id;
     
     console.log('요청 파라미터 : ' + paramData);
     
     // 데이터베이스 객체가 초기화된 경우
     if(database) {
-        // 1. 모든 단말 검색
-        database.any('SELECT * from push_registry')
-            .then(function(data) {
-                if(data.length > 0) {
-                    console.dir(data);    
-                    
-                    var message = { title : "emoodchart" , content : paramData }
-                    
-                    var regIds = [];
-                    for(var i = 0 ; i < data.length ; i++) {
-                        var curId = data[i].registration_id;
-                        console.log('등록 ID #' + i + ' : ' + regIds.length);
-                        regIds.push(curId);
-                    }
-                    console.log('전송 대상 단말 수 : ' + regIds.length);
-                    
-                    for(var i = 0 ; i < regIds.length ; i++) {
+        
+        var noti_key = '';
+        groupingPushUser(database, function(err, result) {
+            if (err) {
+                console.log('Push user 불러오는 중에 오류 발생 : ' + err.stack);
+                res.writeHead('200', {'Content-Type': 'application/json;charset=utf8'});
+                res.write("{code: '200', 'message':'Push user 불러오기 실패'}");
+                res.end();
+            } 
+            
+            if (result) {
+                
+                console.log('Push user 그룹 만들기');
+                
+                request({
+                    url : 'https://iid.googleapis.com/notification',
+                    method : 'POST',
+                    headers : {
+                        'Content-Type' : 'application/json',
+                        'Authorization': apikey,
+                        'project_id': projectId
+                    },
+                    body : JSON.stringify({                        
+                        "operation": "add",
+                        "notification_key_name": "survey",
+                        "notification_key": config.notification_key,
+                        "registration_ids": result
+                    })
+                }, function (error, response, body) {
+                    if (error) {
+                        console.error(error, response, body);
+                    } else if (response.statusCode >= 400) {
+                        console.error('HTTP Error: ' + response.statusCode + ' - '
+                                            + response.statusMessage + '\n' + body);
+                    } else {
+                        
+                        // 그룹 구성에 성공했을 때, notification_key를 받음
+                        console.dir(body);
+                        var obj = JSON.parse(body);                        
+                        noti_key = obj.notification_key;    // notification key
+                        
+                        console.log('성공적으로 그룹에 추가하였습니다.');
+                        
                         request({
                             url : 'https://fcm.googleapis.com/fcm/send',
                             method : 'POST',
                             headers : {
-                                'Content-Type' : ' application/json',
+                                'Content-Type' : 'application/json',
                                 'Authorization' : apikey
                             },
                             body : JSON.stringify({                            
@@ -173,36 +230,37 @@ var sendall = function(req, res) {
                                    }
                                 },    
                                 // "to" : "/topics/notice"
-                                "to" : regIds[i]
+                                "to" : noti_key
                             })
-                        }, function(error, response, body) {
-                            if (error) {
-                                console.error(error, response, body);
-                            } else if (response.statusCode >= 400) {
-                                console.error('HTTP Error: ' + response.statusCode + ' - '
-                                                    + response.statusMessage + '\n' + body);
+                        }, function(error2, response2, body2) {
+                            if (error2) {
+                                console.error(error2, response2, body2);
+                            } else if (response2.statusCode >= 400) {
+                                console.error('HTTP Error: ' + response2.statusCode + ' - '
+                                                    + response2.statusMessage + '\n' + body2);
                             } else {
-                                console.dir(body);
+                                console.dir(body2);                                
                                 res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
                                 res.write('<h2>푸시 메시지 전송 성공</h2>');
                                 res.end();
                             }
                         });     
-                    }               
-                }
-            })
-            .catch(function(err) {
-                console.error('단말 리스트 조회 중 오류 발생 : ' + err.stack);
-
-                res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                res.write('<h2>단말 리스트 조회 중 오류 발생</h2>');
-                res.write('<p>' + err.stack + '</p>');
+                    }
+                });   
+                
+            } else {                
+                console.log('Push user가 검색되지 않았습니다.');
+                res.writeHead('200', {'Content-Type': 'application/json;charset=utf8'});
+                res.write("{code: '200', 'message':'Push user가 검색되지 않았습니다.'}");
                 res.end();
-
-                return;
-            });
-    }
-}
+            }
+        });
+        
+        console.log("notification key: " + noti_key);
+        
+        
+    } 
+};
 
 module.exports.adddevice = adddevice;
 module.exports.listdevice = listdevice;
