@@ -23,10 +23,10 @@ var adddevice = function(req, res) {
         database.any('SELECT user_id from public.push_registry where user_id = $1 and proj_id = $2 and inst_id = $3', [paramUserId, paramProjId, paramInstId])
         .then(data => {
             if (data.length > 0) {
-                console.log('이미 사용자 정보가 존재합니다 : ' + data[0]);
+                console.log('이미 사용자 정보가 존재합니다 : ' + data);
                 
-                res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                res.write("<h2>이미 사용자 정보가 존재합니다.<h2>");
+                res.writeHead('500', {'Content-Type': 'application/json;charset=utf8'});
+                res.write("{code: '500', 'message':'이미 사용자가 존재합니다.'}");
                 res.end();
             } else {
                 // Device 정보 저장
@@ -36,38 +36,34 @@ var adddevice = function(req, res) {
                     if (data.user_id) {
                         console.log('다음 단말 데이터 추가함 : ' + data.user_id);
 
-                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                        res.write("<h2>단말 데이터 추가 성공<h2>");
+                        res.writeHead('200', {'Content-Type': 'application/json;charset=utf8'});
+                        res.write("{code: '200', 'message':'push token 추가 성공'}");
                         res.end();
                     } else {
                         console.log('추가된 단말 데이터가 없음.');
 
-                        res.writeHead('404', {'Content-Type':'text/html;charset=utf8'});
-                        res.write("<h2>단말 데이터 추가 실패<h2>");
+                        res.writeHead('200', {'Content-Type': 'application/json;charset=utf8'});
+                        res.write("{code: '200', 'message':'push token 추가 실패'}");
                         res.end();
                     }
                 })
                 .catch(err => {
                     console.error('단말 정보 추가 중 오류 발생 : ' + err.stack);
 
-                    res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                    res.write('<h2>단말 정보 추가 중 오류 발생</h2>');
+                    res.writeHead('500', {'Content-Type': 'application/json;charset=utf8'});
+                    res.write("{code: '500', 'message':'단말 데이터 추가 중 오류 발생'}");
                     res.write('<p>' + err.stack + '</p>');
                     res.end();
-
-                    return;
                 });
             }
         })
         .catch(err => {
             console.error('단말 정보 추가 중 오류 발생 : ' + err.stack);
 
-            res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-            res.write('<h2>단말 정보 추가 중 오류 발생</h2>');
+            res.writeHead('500', {'Content-Type': 'application/json;charset=utf8'});
+            res.write("{code: '500', 'message':'단말 데이터 추가 중 오류 발생'}");
             res.write('<p>' + err.stack + '</p>');
             res.end();
-
-            return;
         });
         
         
