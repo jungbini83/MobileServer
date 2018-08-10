@@ -87,13 +87,13 @@ var listdevice = function(req, res) {
     if(database) {
         
         // 1. 모든 단말 검색
-        database.any('SELECT * from device')
+        database.any('SELECT * from push_registry')
             .then(function(data) {
                 if(data.length > 0) {
                     console.dir(data);
                     
                     var context = {
-                        title: '단말 목록',
+                        title: '푸시 서비스에 등록된 사용자 리스트',
                         devices: data
                     };
                     
@@ -107,10 +107,10 @@ var listdevice = function(req, res) {
                 }
             })
             .catch(function(err) {
-                console.error('단말 리스트 조회 중 오류 발생 : ' + err.stack);
+                console.error('사용자 조회 중 오류 발생 : ' + err.stack);
 
                 res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                res.write('<h2>단말 리스트 조회 중 오류 발생</h2>');
+                res.write('<h2>사용자 조회 중 오류 발생</h2>');
                 res.write('<p>' + err.stack + '</p>');
                 res.end();
 
