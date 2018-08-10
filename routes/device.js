@@ -7,6 +7,8 @@ var adddevice = function(req, res) {
     
     var database = req.app.get('database');
     
+    console.log("데이터베이스 변수 가져오기 성공");
+    
     var paramUserId     = req.body.userId || req.query.userId;
     var paramProjId     = req.body.projId || req.query.projId;
     var paramInstId     = req.body.instId || req.query.instId;
