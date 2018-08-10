@@ -25,8 +25,8 @@ var adddevice = function(req, res) {
             if (data.length > 0) {
                 console.log('이미 사용자 정보가 존재합니다 : ' + data);
                 
-                res.writeHead('500', {'Content-Type': 'application/json;charset=utf8'});
-                res.write("{code: '500', 'message':'이미 사용자가 존재합니다.'}");
+                res.writeHead('200', {'Content-Type': 'application/json;charset=utf8'});
+                res.write("{code: '200', 'message':'이미 사용자가 존재합니다.'}");
                 res.end();
             } else {
                 // Device 정보 저장
