@@ -19,34 +19,58 @@ var adddevice = function(req, res) {
     // 데이터베이스 객체가 초기화된 경우
     if(database) {
         
-        // Device 정보 저장
-        database.one('INSERT into public.push_registry(user_id, proj_id, inst_id, registration_id) values($1, $2, $3, $4) returning user_id', 
-                     [paramUserId, paramProjId, paramInstId, paramRegId])
-            .then(data => {
-                if (data.user_id) {
-                    console.log('다음 단말 데이터 추가함 : ' + data.user_id);
-                    
-                    res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                    res.write("<h2>단말 데이터 추가 성공<h2>");
-                    res.end();
-                } else {
-                    console.log('추가된 단말 데이터가 없음.');
-                    
-                    res.writeHead('404', {'Content-Type':'text/html;charset=utf8'});
-                    res.write("<h2>단말 데이터 추가 실패<h2>");
-                    res.end();
-                }
-            })
-            .catch(err => {
-                console.error('단말 정보 추가 중 오류 발생 : ' + err.stack);
-            
+        // 관련 정보가 이미 있는지 검색
+        database.any('SELECT user_id from public.push_registry where user_id = $1 and proj_id = $2 and inst_id = $3', [paramUserId, paramProjId, paramInstId])
+        .then(data => {
+            if (data.length > 0) {
+                console.log('이미 사용자 정보가 존재합니다 : ' + data.user_id);
+                
                 res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                res.write('<h2>단말 정보 추가 중 오류 발생</h2>');
-                res.write('<p>' + err.stack + '</p>');
+                res.write("<h2>이미 사용자 정보가 존재합니다.<h2>");
                 res.end();
-            
-                return;
-            });
+            } else {
+                // Device 정보 저장
+                database.one('INSERT into public.push_registry(user_id, proj_id, inst_id, registration_id) values($1, $2, $3, $4) returning user_id', 
+                     [paramUserId, paramProjId, paramInstId, paramRegId])
+                .then(data => {
+                    if (data.user_id) {
+                        console.log('다음 단말 데이터 추가함 : ' + data.user_id);
+
+                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                        res.write("<h2>단말 데이터 추가 성공<h2>");
+                        res.end();
+                    } else {
+                        console.log('추가된 단말 데이터가 없음.');
+
+                        res.writeHead('404', {'Content-Type':'text/html;charset=utf8'});
+                        res.write("<h2>단말 데이터 추가 실패<h2>");
+                        res.end();
+                    }
+                })
+                .catch(err => {
+                    console.error('단말 정보 추가 중 오류 발생 : ' + err.stack);
+
+                    res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                    res.write('<h2>단말 정보 추가 중 오류 발생</h2>');
+                    res.write('<p>' + err.stack + '</p>');
+                    res.end();
+
+                    return;
+                });
+            }
+        })
+        .catch(err => {
+            console.error('단말 정보 추가 중 오류 발생 : ' + err.stack);
+
+            res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+            res.write('<h2>단말 정보 추가 중 오류 발생</h2>');
+            res.write('<p>' + err.stack + '</p>');
+            res.end();
+
+            return;
+        });
+        
+        
     } else {  // 데이터베이스 객체가 초기화되지 않은 경우 실패 응답 전송
         
         console.error('Database가 초기화되지 않았습니다.');
