@@ -10,24 +10,24 @@ var queryPatId = function(req, res) {
     var paramProjId     = req.body.projId || req.query.projId;
     var paramInstId     = req.body.instId || req.query.instId;
 
-    var database2 = pgp(config.mdpic_db_url);
+    var database = req.app.get('database');
 
     console.log("조회할 피험자 정보(User ID: " + paramUserId + ", Project ID: " + paramProjId + ", Institution ID: " + paramInstId + ")");
 
     // 데이터베이스 객체가 초기화된 경우
-    if(database2) {
+    if(database) {
 
         // 관련 정보가 이미 있는지 검색
-        database2.any('SELECT id from public.patient where identifier = $1 and proj_id = $2 and inst_id = $3', [paramUserId, paramProjId, paramInstId])
+        database.any('SELECT id from public.patient where identifier = $1 and proj_id = $2 and inst_id = $3', [paramUserId, paramProjId, paramInstId])
         .then(data => {            
             if (data.length > 0) {
                 console.log('피험자 ID : ' + data[0].id);
-		res.writeHead('200', {'Content-Type': 'application/json;chartset=utf8'});
-		res.write("{code: '200', 'message':" + data[0].id + "}");
-		res.end();
+                res.writeHead('200', {'Content-Type': 'application/json;chartset=utf8'});
+                res.write("{code: '200', 'message':" + data[0].id + "}");
+                res.end();
             } else {                
-		console.log('조회된 피험자가 없습니다.');
-		res.writeHead('200', {'Content-Type': 'application/json;chartset=utf8'});
+                console.log('조회된 피험자가 없습니다.');
+                res.writeHead('200', {'Content-Type': 'application/json;chartset=utf8'});
                 res.write("{code: '200', 'message':'조회된 피험자가 없습니다.'}");
                 res.end();
             }
@@ -56,7 +56,7 @@ var adddevice = function(req, res) {
 
     console.log('요청 파라미터 : ' + paramPatId + ', ' + paramRegId);
 
-    database = req.app.get('database');
+    var database = req.app.get('database');
     console.log("데이터베이스 변수 가져오기 성공");
     
     // 데이터베이스 객체가 초기화된 경우
