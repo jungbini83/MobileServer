@@ -28,7 +28,6 @@ var groupingPushDevice = function(db, callback) {
         });
 }
 
-
 var surveyNotifier = function(app) {
 
 	var database = app.get('database');
@@ -38,6 +37,7 @@ var surveyNotifier = function(app) {
 		console.log('설문조사를 요청하는 push message를 전송합니다.');
 
 		var notifier = schedule.scheduleJob('00 00 20 * * *', function() {
+//		var notifier = schedule.scheduleJob('01 * * * * *', function() {
 			
 			var message = {title: "설문지 작성  요청", content: "설문지를 작성해주세요."}
 
@@ -93,20 +93,21 @@ var surveyNotifier = function(app) {
 									},
 									body : JSON.stringify({
 										"data" : {
-											"content": "설문지를 작성해주세요."
+											"title": "[content] 설문지 작성 요청",
+											"content": "[content] 설문지를 작성해주세요."
 										},
-										"notification" : {
-											"title": "설문지 작성 요청",
-											"body": "설문지를 작성해주세요.",
-											"sound": "default"
-										},
-										"android": {
-											"notification" : {
-												"body": "설문지를 작성해주세요.",
-												"title": "설문지 작성 요청",
-												"sound": "default"
-											}
-										},
+//										"notification" : {
+//											"title": "설문지 작성 요청",
+//											"body": "[body] 설문지를 작성해주세요.",
+//											"sound": "default"
+//										},
+//										"android": {
+//											"notification" : {
+//												"body": "설문지를 작성해주세요.",
+//												"title": "설문지 작성 요청",
+//												"sound": "default"
+//											}
+//										},
 										"to" : noti_key
 									})
 								}, function(error2, response2, body2) {
