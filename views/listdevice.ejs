@@ -66,36 +66,30 @@
        		
 			      		
 						<div class="ui grid">
-			   				<div class="two wide column">User ID</div>
-			   				<div class="two wide column">Project ID</div>
-			   				<div class="two wide column">Inst ID</div>
+			   				<div class="two wide column">환자 ID</div>
 			   				<div class="two wide column">Registration ID</div>
 			   							   			</div>
 
 						<div class="ui very relaxed selection celled list">
 							<%  
 							    for (var i = 0; i < devices.length; i++) {
-								   var curUserId = devices[i].user_id;
-								   var curProjId = devices[i].proj_id;
-								   var curInstId = devices[i].inst_id;
+								   var curUserId = devices[i].pat_id;
 								   var curRegId = devices[i].registration_id;
 								   var curNo = devices.length - i;
 								   %>
-								    <div class="item">
-										<div class="ui grid">
+								   <div class="item">
+									<div class="ui grid">
 						    				<div class="fourteen wide column" onclick="javascript:window.location='/process/listdevice">
 						    					<div class="ui header">
-										    		<h4 class="ui left aligned header">
-										    			<%=curUserId %>
-										    		</h4>
+										    		<h5 class="ui left aligned header">
+									   				<%=curUserId %>
+									    			</h5>
 											      	<h5 class="ui right aligned orange header">
-											      			<%=curProjId %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											        		<%=curInstId %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											        		<%=curRegId %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										        		<%=curRegId %>
 											      	</h5>
-												</div>
-						    				</div>
-						    			</div>
+											</div>
+							    			</div>
+							    		</div>
 						    		</div>
 							<% } %>	
 						 

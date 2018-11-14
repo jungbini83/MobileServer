@@ -23,7 +23,7 @@ var database = require('./database/database');
 var route_loader = require('./routes/route_loader');
 
 // 주기적으로 Push Notification 보내기
-var pushservice = require('./push-service/notifier');
+var push_notifier = requires('./notification/notifier');
 
 // 익스프레스 객체 생성
 var app = express();
@@ -52,14 +52,15 @@ app.use('/public', static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
 // 세션 설정
-// app.use(expressSession({
-//    secret: 'my key', 
-//    resave: true,
-//    saveUninitialized: true
-//}));
+app.use(expressSession({
+    secret: 'my key', 
+    resave: true,
+    saveUninitialized: true
+}));
 
 // 데이터베이스 초기화
 database.init(app, config);
+
 
 // 라우터 객체 참조 및 초기화
 var router = express.Router();
@@ -74,9 +75,6 @@ var errorHandler = expressErrorHandler({
 
 app.use(expressErrorHandler.httpError(404));
 app.use(errorHandler);
-
-// === 푸시 서비스 시작 == //
-pushservice.surveyNotifier(app);
 
 // === 서버 시작 ===//
 http.createServer(app).listen(app.get('port'), function() {
