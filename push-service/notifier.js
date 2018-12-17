@@ -93,8 +93,8 @@ var surveyNotifier = function(app) {
 									},
 									body : JSON.stringify({
 										"data" : {
-											"title": "[content] 설문지 작성 요청",
-											"content": "[content] 설문지를 작성해주세요."
+											"title": "eMoodChart",
+											"content": "설문을 작성해주세요."
 										},
 //										"notification" : {
 //											"title": "설문지 작성 요청",
