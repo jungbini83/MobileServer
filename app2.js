@@ -51,13 +51,6 @@ app.use('/public', static(path.join(__dirname, 'public')));
 // cookie-parser 설정
 app.use(cookieParser());
 
-// 세션 설정
-// app.use(expressSession({
-//    secret: 'my key', 
-//    resave: true,
-//    saveUninitialized: true
-//}));
-
 // 데이터베이스 초기화
 database.init(app, config);
 
